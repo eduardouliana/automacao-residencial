@@ -21,6 +21,8 @@ int pinoLuzes = D7;
 // Variáveis para ler do Firebase
 String statusPorta = "";
 String statusLuzes = "";
+String statusPortaANT = "";
+String statusLuzesANT = "";
 
 void setup() {
   Serial.begin(9600);
@@ -52,24 +54,29 @@ void setup() {
 
 void loop() {
   // Lê o status do Firebase
+  statusPortaANT = statusPorta;
+  statusLuzesANT = statusLuzes;
   statusPorta = Firebase.getString("STATUS_PORTA");
   statusLuzes = Firebase.getString("STATUS_LUZES");
 
   // Verifica se é para abrir a porta
-  if (statusPorta == "ABRIR") {
-    Serial.println("Abrindo porta...");
-    digitalWrite(pinoPorta, HIGH);
-  } else {
-    Serial.println("Fechando porta...");
-    digitalWrite(pinoPorta, LOW);
+  if (statusPorta != statusPortaANT) {  
+    if (statusPorta == "ABRIR") {
+      Serial.println("Abrindo porta...");
+      digitalWrite(pinoPorta, HIGH);
+    } else {
+      Serial.println("Fechando porta...");
+      digitalWrite(pinoPorta, LOW);
+    }
   }
-
   // Verifica se é para ligar as luzes
-  if (statusLuzes == "LIGAR") {
-    Serial.println("Ligando luzes...");
-    digitalWrite(pinoLuzes, HIGH);
-  } else {
-    Serial.println("Desligando luzes...");
-    digitalWrite(pinoLuzes, LOW);
+  if (statusLuzes != statusLuzesANT) {  
+    if (statusLuzes == "LIGAR") {
+      Serial.println("Ligando luzes...");
+      digitalWrite(pinoLuzes, HIGH);
+    } else {
+      Serial.println("Desligando luzes...");
+      digitalWrite(pinoLuzes, LOW);
+    }
   }
 }
