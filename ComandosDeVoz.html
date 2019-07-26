@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Comandos de voz</title>
+  </head>
+  <body>
+    <p id="output"></p>
+    <button id="start">Click para começar</button>
+    <script>
+      (() => {
+        const startBtn = document.querySelector('#start');
+        const output = document.querySelector('#output');
+        function start() {
+          const recognition = new webkitSpeechRecognition();
+          recognition.interimResults = true;
+          recognition.lang = "pt-BR";
+          recognition.continuous = true;
+          recognition.start();
+          // This event happens when you talk in the microphone
+          recognition.onresult = function(event) {
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+              if (event.results[i].isFinal) {
+                if (event.results[i][0].transcript.trim().toLowerCase() === 'abrir porta') {
+                    output.textContent = 'Abrindo porta...........'
+                } else if (event.results[i][0].transcript.trim().toLowerCase() === 'fechar porta') {
+                    output.textContent = 'Fechando porta .........'
+                } else if (event.results[i][0].transcript.trim().toLowerCase() === 'ligar luzes') {
+                    output.textContent = 'Ligando as luzes..............'
+                } else if (event.results[i][0].transcript.trim().toLowerCase() === 'desligar luzes') {
+                    output.textContent = 'Desligando as luzes ..........'
+                } else {
+                    const content = event.results[i][0].transcript.trim();
+                    output.textContent = content;
+                }
+              }
+            }
+          };
+        };
+        startBtn.addEventListener('click', () => start());
+      })();
+    </script>
+  </body>
+</html>
